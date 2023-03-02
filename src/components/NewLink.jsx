@@ -3,7 +3,9 @@ import { useState } from "react";
 
 function NewLink({ nameLink, newLink }) {
 
-    let text = nameLink.replace(/(-)/gm, "_");
+    let newText = nameLink.replace("?", "_");
+
+    let text = newText.replace(/(-)/gm, "_");
 
     const [Copy, setCopy] = useState(false);
 

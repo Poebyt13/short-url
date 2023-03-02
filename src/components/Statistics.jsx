@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import NewLink from "./NewLink";
 import Card from "./Card";
 
@@ -15,15 +15,7 @@ function Statistics() {
     const [key, setKey] = useState(0);
     const [inputText, setInputText] = useState("");
     const [containerInfo, setContainerInfo] = useState([]);
-    const [infoCard, setInfoCard] = useState([]);
-
-    useEffect(() => {
-        axios.get("src/components/information.json").then(e => {
-            setInfoCard(e.data);
-        }).catch(() => {
-            console.log("errore");
-        })
-    }, [])
+    const [contatoreContainer, setContatoreContainer] = useState(0);
 
     const aumentare = (n) => {
         return n + 1;
@@ -41,22 +33,16 @@ function Statistics() {
             } else {
 
                 setErrore(false);
-                axios.post("https://api.urlo.in/api/short-url", {
-                    "originalUrl": inputText,
-                }).then(e => {
+                axios.get("https://api.shrtco.de/v2/shorten?url="+inputText).then(e => {
 
+                    containerInfo[contatoreContainer] = <NewLink nameLink={e.data.result.original_link} newLink={e.data.result.full_short_link} key={key}></NewLink>
 
-                    console.log(key);
-                    if (key == 4) {
-                        setKey(-1);
-                        setContainerInfo(containerInfo[key] = <NewLink nameLink={e.data.data.originalUrl} newLink={e.data.data.shortUrl} key={key}></NewLink>);
-
-
-                    } else {
-                        containerInfo[key] = <NewLink nameLink={e.data.data.originalUrl} newLink={e.data.data.shortUrl} key={key}></NewLink>
-                    }
-
+                    setContatoreContainer(aumentare);
                     setKey(aumentare);
+
+                    if (contatoreContainer == 3) {
+                        setContatoreContainer(0);
+                    }
                 })
             }
 
